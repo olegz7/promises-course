@@ -1,27 +1,7 @@
+// region Setup
 const API_URL = 'https://starwars.egghead.training/'
 const output = document.getElementById("output");
 const spinner = document.getElementById("spinner")
-
-// add effect before data is on the screen // removed later with spinner
-// output.innerText = "Loading ...";
-
-
-
-///////////////////   adding spinner
-
-fetch(API_URL + "films")
-    .then(response => {
-        if (!response.ok) {
-            throw Error("Unsuccessful response");
-        }
-        return response.json().then(films => {
-            output.innerText = getFilmTitles(films)
-        })
-    })
-    .catch(error => {
-        console.warn(error)
-        output.innerText = ":(";
-    })
 
 function getFilmTitles(films) {
     return films
@@ -29,6 +9,65 @@ function getFilmTitles(films) {
     .map(film => `${film.episode_id}. ${film.title}`)
     .join("\n")
 }
+// endregion
+
+// add effect before data is on the screen // removed later with spinner
+// output.innerText = "Loading ...";
+
+///////////////////   Promise.reject instead of throw Error
+
+// // should be "films" for correct response
+// fetch(API_URL + "film")
+//     .then(response => {
+//         if (!response.ok) {
+//             return Promise.reject(
+//                 new Error("Unsuccessful response")
+//                 // can be just message
+//                 // "Unsuccessful response"
+//                 // but in this way there will not be error code line in console to track/debug it
+//             )
+//         }
+//         return response.json().then(films => {
+//             output.innerText = getFilmTitles(films)
+//         })
+//     })
+//     .catch(error => {
+//         console.warn(error)
+//         output.innerText = ":(";
+//     })
+//     .finally(() => {
+//         spinner.remove();
+//     })
+
+
+///////////////////   adding spinner, promise.finally
+
+// fetch(API_URL + "film")
+//     .then(response => {
+//         if (!response.ok) {
+//             throw Error("Unsuccessful response");
+//         }
+//         return response.json().then(films => {
+//             output.innerText = getFilmTitles(films)
+//             // if we add return here, we will be able to return something in .catch method
+//             return films;
+//         })
+//     })
+//     .catch(error => {
+//         console.warn(error)
+//         output.innerText = ":(";
+//         // throw new Error("...")
+//         return []
+//     })
+//     .finally(() => {
+//         spinner.remove();
+//     })
+//     // .then has access to films, in case no error
+//     // if error - than what .catch returns will be console logged here (i.e. [])
+//     .then(films => {
+//         console.log(films)
+//     })
+
 
 ///////////////////   if we try to access endpoint that does not exist ('movies')
 
